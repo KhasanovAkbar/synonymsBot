@@ -34,7 +34,6 @@ public class SendMessageService implements SendMessageImpl<Message> {
     Random random = new Random();
     @Value("${telegram.bot.token}")
     private String token;
-    private static final String filePath = "/Users/akbarhasanov/IdeaProjects/DictionaryBot/src/main/resources/test.txt";
     static BotUser user = new BotUser();
     static LessonNumber lessonNumber = new LessonNumber();
     static Word word = new Word();
@@ -129,7 +128,7 @@ public class SendMessageService implements SendMessageImpl<Message> {
         String fileId = document.getFileId();
         String urlContents = getUrlContents("https://api.telegram.org/bot" + token + "/getFile?file_id=" + fileId);
 
-        File localFile = new File(filePath);
+        File localFile = new File(urlContents);
         InputStream is = null;
         try {
             is = new URL("https://api.telegram.org/file/bot" + token + "/" + urlContents).openStream();
@@ -138,7 +137,7 @@ public class SendMessageService implements SendMessageImpl<Message> {
             throw new RuntimeException(e);
         }
         try (BufferedReader buffer = new BufferedReader(
-                new FileReader(filePath))) {
+                new FileReader(localFile))) {
             String str;
             while ((str = buffer.readLine()) != null) {
                 word = new Word();
