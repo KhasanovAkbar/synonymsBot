@@ -44,4 +44,9 @@ public class WordCache implements Cache<Word> {
     public List<Word> getAll() {
         return wordRepository.getAll();
     }
+
+    @Override
+    public void delete(Word word) {
+
+    }
 }

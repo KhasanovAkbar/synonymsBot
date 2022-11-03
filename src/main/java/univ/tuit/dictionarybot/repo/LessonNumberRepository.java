@@ -9,6 +9,4 @@ import java.util.List;
 
 public interface LessonNumberRepository extends JpaRepository<LessonNumber, Long>    {
 
-    @Query(value = "select l from LessonNumber l order by l.id")
-    List<LessonNumber> getAll();
 }

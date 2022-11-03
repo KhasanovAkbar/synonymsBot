@@ -48,7 +48,10 @@ public class MessageHandler implements Handler<Message> {
             switch (message.getText()) {
                 case "/start":
                     sm = sendMessageService.start(message);
-                    //    cache.add(user);
+                    break;
+
+                case "/restart":
+                    sm = sendMessageService.restart(message);
                     break;
 
                 case "/about":
@@ -58,6 +61,7 @@ public class MessageHandler implements Handler<Message> {
                 case "/add7660":
                     sm = sendMessageService.addWord(message);
                     break;
+
                 case "/delete7660":
                     sm = sendMessageService.deleteWords(message);
                     break;
@@ -83,12 +87,22 @@ public class MessageHandler implements Handler<Message> {
                             break;
                         }
                     }
+                    try {
+                        if ((message.getFrom().getId().equals(cache.findBy(user_id, lastUser.getId()).getUserId()) && lastUser.getLessonPage().equals("none") && lastUser.getQuestion().equals("none1") && lastUser.getIsAnswer() == 0) || (message.getFrom().getId().equals(cache.findBy(user_id, lastUser.getId()).getUserId()) && !lastUser.getLessonPage().equals("none") && !lastUser.getQuestion().equals("none1") && lastUser.getIsAnswer() == 1 && !lastUser.getAnswer().equals("none") && message_text.contains("from") && message_text.contains("to")))
+                            sm = sendMessageService.lesson(message);
 
-                    if (message.getFrom().getId().equals(cache.findBy(user_id, lastUser.getId()).getUserId()) && !lastUser.getLessonPage().equals("none"))
-                        sm = sendMessageService.lessonContinue(message);
-                    else if (message_text.contains("from") && message_text.contains("to") && lastNumber.equals("none"))
-                        sm = sendMessageService.addTitle(message);
-                    else sm = sendMessageService.lesson(message);
+                        else if (message.getFrom().getId().equals(cache.findBy(user_id, lastUser.getId()).getUserId()) && !lastUser.getLessonPage().equals("none") && !lastUser.getQuestion().equals("none1") && lastUser.getIsAnswer() == 1)
+                            sm = sendMessageService.lessonContinue(message);
+
+                        else if (message_text.contains("from") && message_text.contains("to") && lastNumber.equals("none"))
+                            sm = sendMessageService.addTitle(message);
+
+                        else sm = sendMessageService.free(message);
+                    } catch (Exception e) {
+                        sm = sendMessageService.free(message);
+
+                    }
+
             }
         } else if (message.hasDocument()) {
             sm = sendMessageService.addNewFile(message);

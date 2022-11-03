@@ -24,4 +24,8 @@ public interface SendMessageImpl<T> {
     SendMessage deleteWords(T t);
 
     SendMessage allUsers(T t);
+
+    SendMessage free(T t);
+
+    SendMessage restart(T t);
 }

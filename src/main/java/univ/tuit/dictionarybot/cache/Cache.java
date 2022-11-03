@@ -15,4 +15,6 @@ public interface Cache<T> {
 
     List<T> getAll();
 
+    void delete(T t);
+
 }

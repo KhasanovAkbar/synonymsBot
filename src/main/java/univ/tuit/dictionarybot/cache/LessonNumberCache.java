@@ -41,6 +41,11 @@ public class LessonNumberCache implements Cache<LessonNumber> {
 
     @Override
     public List<LessonNumber> getAll() {
-        return lessonNumberRepository.getAll();
+        return lessonNumberRepository.findAll();
+    }
+
+    @Override
+    public void delete(LessonNumber lessonNumber) {
+
     }
 }

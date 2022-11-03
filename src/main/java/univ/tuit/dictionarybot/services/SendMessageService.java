@@ -60,7 +60,7 @@ public class SendMessageService implements SendMessageImpl<Message> {
         user.setTime(format);
         user.setIsAnswer(0);
         user.setLessonPage("none");
-        user.setQuestion("none");
+        user.setQuestion("none1");
         user.setAnswer("none");
     }
 
@@ -70,7 +70,7 @@ public class SendMessageService implements SendMessageImpl<Message> {
         long chat_id = message.getChatId();
         user = new BotUser();
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setText("Hello " + message.getFrom().getFirstName() +" "+message.getFrom().getLastName() + "\nWelcome to synonyms bot");
+        sendMessage.setText("Hello " + message.getFrom().getFirstName() + " " + message.getFrom().getLastName() + "\nWelcome to synonyms bot");
         sendMessage.setChatId(String.valueOf(chat_id));
         keyboardRow.clear();
         info(message, chat_id);
@@ -144,6 +144,7 @@ public class SendMessageService implements SendMessageImpl<Message> {
     public SendMessage lesson(Message message) {
         user = userCache.findBy(user.getUserId(), user.getId());
         user.setLessonPage(message.getText());
+        user.setIsAnswer(1);
         userCache.update(user);
 
         SendMessage sm = new SendMessage();
@@ -164,7 +165,8 @@ public class SendMessageService implements SendMessageImpl<Message> {
     @Override
     public SendMessage lessonContinue(Message message) {
 
-        user = userCache.findBy(user.getUserId(), user.getId());
+        user = userCache.findBy(message.getFrom().getId(), user.getId());
+        user.setAnswer(message.getText());
         SendMessage sm = new SendMessage();
         Long chatId = message.getChatId();
         List<Word> all = new ArrayList<>();
@@ -177,6 +179,7 @@ public class SendMessageService implements SendMessageImpl<Message> {
                 special = word.getSynonym();
             }
         }
+        assert special != null;
         String[] split = special.split("=");
         List<String> lastWord = new ArrayList<>();
         for (String s : split) {
@@ -204,7 +207,7 @@ public class SendMessageService implements SendMessageImpl<Message> {
             }
         }
         generate(sm, all);
-return null;
+        return null;
     }
 
     private void generate(SendMessage sm, List<Word> all) {
@@ -247,11 +250,19 @@ return null;
                     .chatId(String.valueOf(chat_id))
                     .build());
         } catch (Exception e) {
+
+            for (Word value : all) {
+                if (value.getFromTo().equals("none")) {
+                    Word byId = wordCache.findById(value.getId());
+                    wordCache.delete(byId);
+                }
+            }
             System.out.println(e.getMessage());
             messageSender.sendMessage(SendMessage.builder()
                     .text("Words not added")
                     .chatId(String.valueOf(chat_id))
                     .build());
+
         }
         return null;
     }
@@ -264,6 +275,24 @@ return null;
 
     @Override
     public SendMessage allUsers(Message message) {
+        return null;
+    }
+
+    @Override
+    public SendMessage free(Message message) {
+        long chat_id = message.getChatId();
+
+        return SendMessage.builder()
+                .text("This command doesn't exist. \nClick /start to restart bot")
+                .chatId(String.valueOf(chat_id))
+                .build();
+    }
+
+    @Override
+    public SendMessage restart(Message message) {
+        user = userCache.findBy(message.getChatId(), user.getId());
+        userCache.delete(user);
+        start(message);
         return null;
     }
 

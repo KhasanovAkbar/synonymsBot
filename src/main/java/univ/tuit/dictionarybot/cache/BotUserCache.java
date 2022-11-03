@@ -49,4 +49,9 @@ public class BotUserCache implements Cache<BotUser> {
         return userRepository.getAll();
     }
 
+    @Override
+    public void delete(BotUser botUser) {
+        userRepository.delete(botUser);
+    }
+
 }
