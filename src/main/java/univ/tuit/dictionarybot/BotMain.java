@@ -3,13 +3,11 @@ package univ.tuit.dictionarybot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import univ.tuit.dictionarybot.processor.Processor;
 
-import java.io.IOException;
 
 @Component
 public class BotMain extends TelegramWebhookBot {
