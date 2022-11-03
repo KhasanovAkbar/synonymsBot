@@ -51,7 +51,7 @@ public class MessageHandler implements Handler<Message> {
                     //    cache.add(user);
                     break;
 
-                case "About us":
+                case "/about":
                     sm = sendMessageService.aboutUs(message);
                     break;
 
@@ -60,6 +60,10 @@ public class MessageHandler implements Handler<Message> {
                     break;
                 case "/delete7660":
                     sm = sendMessageService.deleteWords(message);
+                    break;
+
+                case "/allUser7660":
+                    sm = sendMessageService.allUsers(message);
                     break;
 
                 default:

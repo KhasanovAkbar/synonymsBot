@@ -68,8 +68,9 @@ public class SendMessageService implements SendMessageImpl<Message> {
     public SendMessage start(Message message) {
 
         long chat_id = message.getChatId();
+        user = new BotUser();
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setText("Hello " + message.getFrom().getFirstName() + "\nWelcome to synonyms dictionary bot");
+        sendMessage.setText("Hello " + message.getFrom().getFirstName() +" "+message.getFrom().getLastName() + "\nWelcome to synonyms bot");
         sendMessage.setChatId(String.valueOf(chat_id));
         keyboardRow.clear();
         info(message, chat_id);
@@ -89,25 +90,9 @@ public class SendMessageService implements SendMessageImpl<Message> {
         long chat_id = message.getChatId();
 
         return SendMessage.builder()
-                .text("About")
+                .text("This bot was created by @hasanov_akbar")
                 .chatId(String.valueOf(chat_id))
                 .build();
-       /* SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(String.valueOf(message.getChatId()));
-        sendMessage.setText("O‘t to‘la nigohim boqqanlarimni, \n" +
-                "O‘zimga aytolmas yoqqanlarimni, \n" +
-                "Yodidan chiqarmas raqamlarimni, \n" +
-                "Qalaysiz men sevsam sevmagan qizlar.");
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        keyboard.add(Collections.singletonList(
-                InlineKeyboardButton.builder()
-                        .text("Yangi She'r")
-                        .callbackData("next_poem")
-                        .build()));
-        inlineKeyboardMarkup.setKeyboard(keyboard);
-        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-        messageSender.sendMessage(sendMessage);*/
     }
 
     @Override
@@ -157,6 +142,7 @@ public class SendMessageService implements SendMessageImpl<Message> {
 
     @Override
     public SendMessage lesson(Message message) {
+        user = userCache.findBy(user.getUserId(), user.getId());
         user.setLessonPage(message.getText());
         userCache.update(user);
 
@@ -178,7 +164,7 @@ public class SendMessageService implements SendMessageImpl<Message> {
     @Override
     public SendMessage lessonContinue(Message message) {
 
-        BotUser byId = userCache.findBy(user.getUserId(), user.getId());
+        user = userCache.findBy(user.getUserId(), user.getId());
         SendMessage sm = new SendMessage();
         Long chatId = message.getChatId();
         List<Word> all = new ArrayList<>();
@@ -187,7 +173,7 @@ public class SendMessageService implements SendMessageImpl<Message> {
         List<Word> words = wordCache.getAll();
         String special = null;
         for (Word word : words) {
-            if (word.getFromTo().equals(byId.getLessonPage()) && word.getSynonym().contains(byId.getQuestion())) {
+            if (word.getFromTo().equals(user.getLessonPage()) && word.getSynonym().contains(user.getQuestion())) {
                 special = word.getSynonym();
             }
         }
@@ -213,7 +199,7 @@ public class SendMessageService implements SendMessageImpl<Message> {
             messageSender.sendMessage(sm);
         }
         for (Word word : words) {
-            if (word.getFromTo().equals(byId.getLessonPage())) {
+            if (word.getFromTo().equals(user.getLessonPage())) {
                 all.add(word);
             }
         }
@@ -272,8 +258,15 @@ return null;
 
     @Override
     public SendMessage deleteWords(Message message) {
+
         return null;
     }
+
+    @Override
+    public SendMessage allUsers(Message message) {
+        return null;
+    }
+
     private ReplyKeyboardMarkup buttons(String str) {
         KeyboardRow row1 = new KeyboardRow();
         row1.add(str);
@@ -301,6 +294,4 @@ return null;
         }
         return path;
     }
-
-
 }

@@ -22,4 +22,6 @@ public interface SendMessageImpl<T> {
     SendMessage addTitle(T t);
 
     SendMessage deleteWords(T t);
+
+    SendMessage allUsers(T t);
 }
