@@ -20,8 +20,7 @@ public class LessonNumberCache implements Cache<LessonNumber> {
     }
 
     @Override
-    public LessonNumber update(LessonNumber lessonNumber) {
-        return null;
+    public void update(LessonNumber lessonNumber) {
     }
 
     @Override

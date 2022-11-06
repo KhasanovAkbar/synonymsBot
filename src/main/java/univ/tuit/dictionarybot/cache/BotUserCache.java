@@ -20,13 +20,12 @@ public class BotUserCache implements Cache<BotUser> {
     }
 
     @Override
-    public BotUser update(BotUser botUser) {
+    public void update(BotUser botUser) {
         BotUser save;
         if (botUser.getUserId() != null) {
             save = userRepository.save(botUser);
         } else
             throw new NullPointerException("No id");
-        return save;
     }
 
     @Override

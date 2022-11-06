@@ -21,8 +21,8 @@ public class WordCache implements Cache<Word> {
     }
 
     @Override
-    public Word update(Word word) {
-        return wordRepository.save(word);
+    public void update(Word word) {
+        wordRepository.save(word);
     }
 
     @Override

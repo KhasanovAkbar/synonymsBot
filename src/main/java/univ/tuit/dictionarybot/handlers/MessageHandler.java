@@ -88,14 +88,14 @@ public class MessageHandler implements Handler<Message> {
                         }
                     }
                     try {
-                        if ((message.getFrom().getId().equals(cache.findBy(user_id, lastUser.getId()).getUserId()) && lastUser.getLessonPage().equals("none") && lastUser.getQuestion().equals("none1") && lastUser.getIsAnswer() == 0) || (message.getFrom().getId().equals(cache.findBy(user_id, lastUser.getId()).getUserId()) && !lastUser.getLessonPage().equals("none") && !lastUser.getQuestion().equals("none1") && lastUser.getIsAnswer() == 1 && !lastUser.getAnswer().equals("none") && message_text.contains("from") && message_text.contains("to")))
+                        if (message_text.contains("from") && message_text.contains("to") && lastNumber.equals("none") && lastUser.getIsAnswer() == 0)
+                            sm = sendMessageService.addTitle(message);
+
+                        else if (message.getFrom().getId().equals(cache.findBy(user_id, lastUser.getId()).getUserId()) && lastUser.getLessonPage().equals("none") && lastUser.getQuestion().equals("none1") && lastUser.getIsAnswer() == 0)
                             sm = sendMessageService.lesson(message);
 
                         else if (message.getFrom().getId().equals(cache.findBy(user_id, lastUser.getId()).getUserId()) && !lastUser.getLessonPage().equals("none") && !lastUser.getQuestion().equals("none1") && lastUser.getIsAnswer() == 1)
                             sm = sendMessageService.lessonContinue(message);
-
-                        else if (message_text.contains("from") && message_text.contains("to") && lastNumber.equals("none"))
-                            sm = sendMessageService.addTitle(message);
 
                         else sm = sendMessageService.free(message);
                     } catch (Exception e) {
